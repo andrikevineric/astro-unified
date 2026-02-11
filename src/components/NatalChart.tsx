@@ -20,6 +20,20 @@ const PLANET_SYMBOLS: Record<string, string> = {
   sun: '☉', moon: '☽', mercury: '☿', venus: '♀', mars: '♂'
 };
 
+const SIGN_ELEMENTS: Record<string, string> = {
+  Aries: 'Fire', Leo: 'Fire', Sagittarius: 'Fire',
+  Taurus: 'Earth', Virgo: 'Earth', Capricorn: 'Earth',
+  Gemini: 'Air', Libra: 'Air', Aquarius: 'Air',
+  Cancer: 'Water', Scorpio: 'Water', Pisces: 'Water'
+};
+
+const ELEMENT_COLORS: Record<string, string> = {
+  Fire: '#E85D04',
+  Earth: '#606C38',
+  Air: '#90E0EF',
+  Water: '#023E8A'
+};
+
 export function NatalChart({ data }: { data: ChartData }) {
   const size = 400;
   const center = size / 2;
@@ -27,7 +41,7 @@ export function NatalChart({ data }: { data: ChartData }) {
   const innerRadius = 120;
   const planetRadius = 95;
 
-  // Calculate planet positions (simplified)
+  // Calculate planet positions based on sign and degree
   const getPlanetPosition = (sign: string, degree: number) => {
     const signIndex = SIGNS.indexOf(sign);
     const totalDegree = signIndex * 30 + degree;
@@ -59,7 +73,6 @@ export function NatalChart({ data }: { data: ChartData }) {
           {/* Sign divisions and labels */}
           {SIGNS.map((sign, i) => {
             const angle = (i * 30 - 90) * (Math.PI / 180);
-            const endAngle = ((i + 1) * 30 - 90) * (Math.PI / 180);
             const midAngle = ((i * 30 + 15) - 90) * (Math.PI / 180);
             
             const x1 = center + innerRadius * Math.cos(angle);
@@ -70,19 +83,7 @@ export function NatalChart({ data }: { data: ChartData }) {
             const labelX = center + ((innerRadius + outerRadius) / 2) * Math.cos(midAngle);
             const labelY = center + ((innerRadius + outerRadius) / 2) * Math.sin(midAngle);
             
-            // Determine element color
-            const elementColors: Record<string, string> = {
-              Fire: '#E85D04',
-              Earth: '#606C38',
-              Air: '#90E0EF',
-              Water: '#023E8A'
-            };
-            const signElements: Record<string, string> = {
-              Aries: 'Fire', Leo: 'Fire', Sagittarius: 'Fire',
-              Taurus: 'Earth', Virgo: 'Earth', Capricorn: 'Earth',
-              Gemini: 'Air', Libra: 'Air', Aquarius: 'Air',
-              Cancer: 'Water', Scorpio: 'Water', Pisces: 'Water'
-            };
+            const elementColor = ELEMENT_COLORS[SIGN_ELEMENTS[sign]];
             
             return (
               <g key={sign}>
@@ -93,7 +94,7 @@ export function NatalChart({ data }: { data: ChartData }) {
                   textAnchor="middle" 
                   dominantBaseline="middle"
                   fontSize="16"
-                  fill={elementColors[signElements[sign]]}
+                  fill={elementColor}
                 >
                   {SIGN_SYMBOLS[i]}
                 </text>
@@ -154,17 +155,39 @@ export function NatalChart({ data }: { data: ChartData }) {
         ))}
       </div>
 
-      {/* Patterns */}
+      {/* Element Distribution */}
       <div className="mt-4 pt-4 border-t border-gray-100">
-        <h3 className="text-sm font-medium text-gray-700 mb-2">Detected Patterns</h3>
-        <div className="flex flex-wrap gap-2">
-          {data.patterns.map((pattern) => (
-            <span key={pattern} className="px-3 py-1 bg-purple-50 text-purple-700 text-xs rounded-full">
-              {pattern}
-            </span>
+        <h3 className="text-sm font-medium text-gray-700 mb-2">Element Balance</h3>
+        <div className="grid grid-cols-4 gap-2">
+          {Object.entries(data.elements).map(([element, value]) => (
+            <div key={element} className="text-center">
+              <div 
+                className="h-2 rounded-full mb-1"
+                style={{ 
+                  backgroundColor: ELEMENT_COLORS[element],
+                  opacity: 0.3 + (value / 100) * 0.7
+                }}
+              />
+              <span className="text-xs text-gray-600">{element}</span>
+              <span className="text-xs text-gray-400 ml-1">{value}%</span>
+            </div>
           ))}
         </div>
       </div>
+
+      {/* Patterns */}
+      {data.patterns.length > 0 && (
+        <div className="mt-4 pt-4 border-t border-gray-100">
+          <h3 className="text-sm font-medium text-gray-700 mb-2">Detected Patterns</h3>
+          <div className="flex flex-wrap gap-2">
+            {data.patterns.map((pattern) => (
+              <span key={pattern} className="px-3 py-1 bg-purple-50 text-purple-700 text-xs rounded-full">
+                {pattern}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
