@@ -61,14 +61,20 @@ export default function Home() {
 
   // Convert charts to component-friendly format
   const westernData = westernChart ? {
-    sun: { sign: westernChart.sun.sign, degree: westernChart.sun.degree, house: 10 },
-    moon: { sign: westernChart.moon.sign, degree: westernChart.moon.degree, house: 9 },
+    sun: { sign: westernChart.sun.sign, degree: westernChart.sun.degree, minutes: westernChart.sun.minutes, retrograde: westernChart.sun.retrograde },
+    moon: { sign: westernChart.moon.sign, degree: westernChart.moon.degree, minutes: westernChart.moon.minutes, retrograde: westernChart.moon.retrograde },
     rising: westernChart.rising,
-    mercury: { sign: westernChart.mercury.sign, degree: westernChart.mercury.degree, house: 11 },
-    venus: { sign: westernChart.venus.sign, degree: westernChart.venus.degree, house: 10 },
-    mars: { sign: westernChart.mars.sign, degree: westernChart.mars.degree, house: 6 },
+    mercury: { sign: westernChart.mercury.sign, degree: westernChart.mercury.degree, minutes: westernChart.mercury.minutes, retrograde: westernChart.mercury.retrograde },
+    venus: { sign: westernChart.venus.sign, degree: westernChart.venus.degree, minutes: westernChart.venus.minutes, retrograde: westernChart.venus.retrograde },
+    mars: { sign: westernChart.mars.sign, degree: westernChart.mars.degree, minutes: westernChart.mars.minutes, retrograde: westernChart.mars.retrograde },
+    jupiter: { sign: westernChart.jupiter.sign, degree: westernChart.jupiter.degree, minutes: westernChart.jupiter.minutes, retrograde: westernChart.jupiter.retrograde },
+    saturn: { sign: westernChart.saturn.sign, degree: westernChart.saturn.degree, minutes: westernChart.saturn.minutes, retrograde: westernChart.saturn.retrograde },
+    uranus: { sign: westernChart.uranus.sign, degree: westernChart.uranus.degree, minutes: westernChart.uranus.minutes, retrograde: westernChart.uranus.retrograde },
+    neptune: { sign: westernChart.neptune.sign, degree: westernChart.neptune.degree, minutes: westernChart.neptune.minutes, retrograde: westernChart.neptune.retrograde },
+    pluto: { sign: westernChart.pluto.sign, degree: westernChart.pluto.degree, minutes: westernChart.pluto.minutes, retrograde: westernChart.pluto.retrograde },
     patterns: westernChart.patterns,
-    elements: westernChart.elements
+    elements: westernChart.elements,
+    aspects: westernChart.aspects
   } : null;
 
   const baziData = baziChart ? {
