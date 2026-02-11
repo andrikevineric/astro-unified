@@ -462,7 +462,7 @@ function detectPatterns(planets: PlanetPosition[], aspects: Aspect[]): string[] 
     if (allPlanets.size >= 4) {
       const oppPlanets = new Set<string>();
       oppositions.forEach(o => { oppPlanets.add(o.planet1); oppPlanets.add(o.planet2); });
-      if ([...allPlanets].every(p => oppPlanets.has(p))) {
+      if (Array.from(allPlanets).every(p => oppPlanets.has(p))) {
         patterns.push('Grand Cross');
       }
     }
