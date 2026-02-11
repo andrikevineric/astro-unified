@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --fire: #E85D04;
+  --earth: #606C38;
+  --air: #90E0EF;
+  --water: #023E8A;
+  --metal: #6C757D;
+  --wood: #2D6A4F;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
