@@ -87,6 +87,7 @@ export default function Home() {
       hour: { stem: baziChart.hour.stem, branch: baziChart.hour.branch },
     },
     dayMaster: baziChart.dayMaster,
+    dayMasterElement: baziChart.dayMasterElement,
     elements: baziChart.elements
   } : null;
 
@@ -220,7 +221,7 @@ export default function Home() {
                 <div className="space-y-4">
                   <DetailPanel title={`Day Master: ${baziData.dayMaster}`}>
                     <p className="text-sm text-gray-600">
-                      {getDayMasterDescription(baziChart?.dayMasterElement || 'Wood')}
+                      {getDayMasterDescription(baziData.dayMasterElement || 'Wood')}
                     </p>
                   </DetailPanel>
                   <DetailPanel title="Element Balance">
