@@ -1,16 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { NatalChart } from '@/components/NatalChart';
 import { BaziPanel } from '@/components/BaziPanel';
 import { CrossReference } from '@/components/CrossReference';
 import { CompatibilityForm } from '@/components/CompatibilityForm';
 import { BirthDataForm } from '@/components/BirthDataForm';
+import { Summary } from '@/components/Summary';
 import { calculateWesternChart, type WesternChart } from '@/lib/western';
 import { calculateBaziChart, type BaziChart } from '@/lib/bazi';
 import { analyzeCrossReference, type CrossRefAnalysis } from '@/lib/crossref';
 
-type Tab = 'western' | 'bazi' | 'crossref' | 'compatibility';
+type Tab = 'summary' | 'western' | 'bazi' | 'crossref' | 'compatibility';
 
 interface BirthData {
   name: string;
@@ -22,7 +23,7 @@ interface BirthData {
 }
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<Tab>('western');
+  const [activeTab, setActiveTab] = useState<Tab>('summary');
   const [showBirthForm, setShowBirthForm] = useState(true);
   const [birthData, setBirthData] = useState<BirthData | null>(null);
   
@@ -31,6 +32,7 @@ export default function Home() {
   const [crossRef, setCrossRef] = useState<CrossRefAnalysis | null>(null);
 
   const tabs: { key: Tab; label: string }[] = [
+    { key: 'summary', label: 'Summary' },
     { key: 'western', label: 'Western Chart' },
     { key: 'bazi', label: 'Bazi' },
     { key: 'crossref', label: 'Cross-Reference' },
@@ -44,7 +46,7 @@ export default function Home() {
     // Parse the birth date and time
     const [year, month, day] = data.birthDate.split('-').map(Number);
     const [hours, minutes] = data.birthTime.split(':').map(Number);
-    const birthDateTime = new Date(year, month - 1, day, hours, minutes);
+    const birthDateTime = new Date(Date.UTC(year, month - 1, day, hours, minutes));
     
     // Calculate Western chart
     const western = calculateWesternChart(birthDateTime, data.latitude, data.longitude);
@@ -103,13 +105,13 @@ export default function Home() {
           <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
             Astro Unified
           </h1>
-          <nav className="flex gap-2">
+          <nav className="flex gap-2 overflow-x-auto">
             {tabs.map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
                 disabled={!birthData && tab.key !== 'compatibility'}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
                   activeTab === tab.key
                     ? 'bg-purple-600 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed'
@@ -151,6 +153,18 @@ export default function Home() {
           </div>
         ) : (
           <>
+            {activeTab === 'summary' && westernChart && baziChart && crossRef && birthData && (
+              <Summary 
+                name={birthData.name}
+                birthDate={birthData.birthDate}
+                birthTime={birthData.birthTime}
+                birthPlace={birthData.birthPlace}
+                western={westernChart}
+                bazi={baziChart}
+                crossRef={crossRef}
+              />
+            )}
+
             {activeTab === 'western' && westernData && (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2">
@@ -175,6 +189,14 @@ export default function Home() {
                       yourself to the world.
                     </p>
                   </DetailPanel>
+                  {westernChart && (
+                    <DetailPanel title={`Midheaven: ${westernChart.midheaven.sign}`} badge={`${westernChart.midheaven.degree}°`}>
+                      <p className="text-sm text-gray-600">
+                        Your public image, career path, and life direction. The MC represents your 
+                        highest aspirations and reputation.
+                      </p>
+                    </DetailPanel>
+                  )}
                   {westernData.patterns.length > 0 && (
                     <DetailPanel title="Chart Patterns">
                       <div className="flex flex-wrap gap-2">
@@ -196,7 +218,7 @@ export default function Home() {
                   <BaziPanel data={baziData} />
                 </div>
                 <div className="space-y-4">
-                  <DetailPanel title={`Day Master: ${baziData.dayMaster}`}>
+                  <DetailPanel title={`Day Master: ${baziData.dayMaster.pinyin}`}>
                     <p className="text-sm text-gray-600">
                       {getDayMasterDescription(baziChart?.dayMasterElement || 'Wood')}
                     </p>
@@ -232,11 +254,16 @@ export default function Home() {
         <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-6 py-3">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="text-sm text-gray-500">
-              <span className="font-medium">Chart for:</span> {birthData.name || 'Anonymous'} • {birthData.birthDate} {birthData.birthTime}
+              <span className="font-medium">Chart for:</span> {birthData.name || 'Anonymous'} | {birthData.birthDate} {birthData.birthTime}
             </div>
-            <button className="px-4 py-2 bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-lg text-sm font-medium">
-              Share Chart
-            </button>
+            <div className="flex gap-2">
+              <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200">
+                Export PDF
+              </button>
+              <button className="px-4 py-2 bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-lg text-sm font-medium">
+                Share Chart
+              </button>
+            </div>
           </div>
         </footer>
       )}
