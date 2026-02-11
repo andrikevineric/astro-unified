@@ -20,7 +20,7 @@ const ELEMENT_COLORS: Record<string, string> = {
 };
 
 export function BaziPanel({ data }: { data: BaziData }) {
-  const pillars = [
+  const pillars: Array<{ name: string; stem: string; branch: string; isDayMaster?: boolean }> = [
     { name: 'Hour', ...data.pillars.hour },
     { name: 'Day', ...data.pillars.day, isDayMaster: true },
     { name: 'Month', ...data.pillars.month },
