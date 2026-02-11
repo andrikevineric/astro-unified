@@ -218,7 +218,7 @@ export default function Home() {
                   <BaziPanel data={baziData} />
                 </div>
                 <div className="space-y-4">
-                  <DetailPanel title={`Day Master: ${baziData.dayMaster.pinyin}`}>
+                  <DetailPanel title={`Day Master: ${baziData.dayMaster}`}>
                     <p className="text-sm text-gray-600">
                       {getDayMasterDescription(baziChart?.dayMasterElement || 'Wood')}
                     </p>

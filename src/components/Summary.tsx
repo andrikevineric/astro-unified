@@ -59,14 +59,14 @@ export function Summary({ name, birthDate, birthTime, birthPlace, western, bazi,
       <div className="bg-white rounded-xl p-6 border border-gray-200">
         <h3 className="text-lg font-semibold mb-4 text-gray-900">Chinese Astrology</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <PillarMini title="Year" stem={bazi.year.stem} branch={bazi.year.branch} />
-          <PillarMini title="Month" stem={bazi.month.stem} branch={bazi.month.branch} />
-          <PillarMini title="Day" stem={bazi.day.stem} branch={bazi.day.branch} />
-          <PillarMini title="Hour" stem={bazi.hour.stem} branch={bazi.hour.branch} />
+          <PillarMini title="Year" pillar={bazi.year} />
+          <PillarMini title="Month" pillar={bazi.month} />
+          <PillarMini title="Day" pillar={bazi.day} />
+          <PillarMini title="Hour" pillar={bazi.hour} />
         </div>
         <div className="mt-4 pt-4 border-t border-gray-100">
           <p className="text-sm text-gray-600">
-            <span className="font-medium text-gray-900">Day Master:</span> {bazi.dayMaster.pinyin} ({bazi.dayMasterElement} {bazi.dayMaster.polarity})
+            <span className="font-medium text-gray-900">Day Master:</span> {bazi.dayMaster} ({bazi.dayMasterElement})
           </p>
         </div>
       </div>
@@ -150,7 +150,7 @@ export function Summary({ name, birthDate, birthTime, birthPlace, western, bazi,
             <div className="flex flex-wrap gap-2">
               {crossRef.reinforcing.map((pattern, i) => (
                 <span key={i} className="px-3 py-1 bg-green-50 text-green-700 text-xs rounded-full">
-                  {pattern}
+                  {pattern.element}: {pattern.note}
                 </span>
               ))}
             </div>
@@ -163,7 +163,7 @@ export function Summary({ name, birthDate, birthTime, birthPlace, western, bazi,
             <div className="flex flex-wrap gap-2">
               {crossRef.balancing.map((pattern, i) => (
                 <span key={i} className="px-3 py-1 bg-blue-50 text-blue-700 text-xs rounded-full">
-                  {pattern}
+                  {pattern.element}: {pattern.note}
                 </span>
               ))}
             </div>
@@ -243,16 +243,15 @@ function IdentityCard({ title, value, detail, description, color }: {
   );
 }
 
-function PillarMini({ title, stem, branch }: { 
+function PillarMini({ title, pillar }: { 
   title: string; 
-  stem: { chinese: string; pinyin: string; element: string };
-  branch: { chinese: string; pinyin: string; animal: string };
+  pillar: { stemChinese: string; branchChinese: string; branchAnimal: string; stem: string };
 }) {
   return (
     <div className="text-center p-3 bg-gray-50 rounded-lg">
       <div className="text-xs text-gray-500 mb-1">{title}</div>
-      <div className="text-xl font-bold text-gray-900">{stem.chinese}{branch.chinese}</div>
-      <div className="text-xs text-gray-600">{branch.animal}</div>
+      <div className="text-xl font-bold text-gray-900">{pillar.stemChinese}{pillar.branchChinese}</div>
+      <div className="text-xs text-gray-600">{pillar.branchAnimal}</div>
     </div>
   );
 }
